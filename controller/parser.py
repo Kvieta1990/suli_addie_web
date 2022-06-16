@@ -92,6 +92,8 @@ def fz_ss_calculator(input_dict: dict):
 
     fzss_dict = {}
 
+    # FZ coefficient and self-scattering level
+
     divisor = 0
     for count, key in enumerate(input_dict.keys()):
         d.append((data[key]['ss']))
@@ -114,5 +116,17 @@ def fz_ss_calculator(input_dict: dict):
 
     fzss_dict['SelfScattering'] = ssl_val
     fzss_dict['FaberZiman'] = fz_val
+
+    # Coefficients for partials
+
+    fzss_dict['partials'] = {}
+
+    all_ele = [key for key in input_dict.keys()]
+
+    for count, key in enumerate(all_ele):
+        for count1 in range(count, len(all_ele)):
+            partial_name = key + "-" + all_ele[count1]
+            partial_val = c[count] * c[count1] * bbar[count] * bbar[count1]
+            fzss_dict['partials'][partial_name] = partial_val
 
     return fzss_dict

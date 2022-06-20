@@ -126,7 +126,11 @@ def fz_ss_calculator(input_dict: dict):
     for count, key in enumerate(all_ele):
         for count1 in range(count, len(all_ele)):
             partial_name = key + "-" + all_ele[count1]
-            partial_val = c[count] * c[count1] * bbar[count] * bbar[count1]
+            if key != all_ele[count1]:
+                partial_val = c[count] * c[count1]
+                partial_val *= (bbar[count] * bbar[count1] * 2)
+            else:
+                partial_val = c[count] * c[count1] * bbar[count] * bbar[count1]
             fzss_dict['partials'][partial_name] = partial_val
 
     return fzss_dict

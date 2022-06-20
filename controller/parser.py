@@ -135,7 +135,7 @@ def fz_ss_calculator(input_dict: dict):
 
     return fzss_dict
     
-    def absorption_calculator(input_dict: dict):
+def absorption_calculator(input_dict: dict):
 
     sa_val = []
     ele_val = []

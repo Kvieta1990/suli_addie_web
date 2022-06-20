@@ -8,3 +8,4 @@ if __name__ == "__main__":
 
     print("Parsed chemical formula -> ", chem_dict)
     print("FZ & Self-scattering level & Partials -> ", fz_ss_calculator(chem_dict))
+    print("Absorption factor -> ", absorption_calculator(chem_dict))

@@ -134,3 +134,19 @@ def fz_ss_calculator(input_dict: dict):
             fzss_dict['partials'][partial_name] = partial_val
 
     return fzss_dict
+    
+def absorption_calculator(input_dict: dict):
+
+    sa_val = []
+    ele_val = []
+    abs_dict = {}
+    abs_val = 0
+    for i in input_dict:
+        ele_val.append(input_dict[i])
+        sa_val.append(data[i]['sa'])
+    ele_int = [int(float(i)) for i in ele_val]
+    for x, y in zip(ele_int, sa_val):
+        abs_val += x * y
+    abs_dict = abs_val
+
+    return abs_dict

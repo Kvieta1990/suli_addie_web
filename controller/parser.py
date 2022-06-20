@@ -134,7 +134,8 @@ def fz_ss_calculator(input_dict: dict):
             fzss_dict['partials'][partial_name] = partial_val
 
     return fzss_dict
-    
+
+
 def absorption_calculator(input_dict: dict):
 
     sa_val = []

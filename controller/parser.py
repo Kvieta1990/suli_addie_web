@@ -152,54 +152,57 @@ def absorption_calculator(input_dict: dict):
 
     return abs_dict
 
-def pf_calculator(input_dict: dict):
 
-    '''MassSampleCan = 40.762 g
-       MassEmptyCan = 38.674 g
-       CanInnerRadius = 0.3 cm
-       SampleHeight = 4.6 cm
-       FullNumDensity = 0.0905
-       LevelAtHighQ = 0.452127
-       SelfScattering = 0.370767'''
-    pf_input = {}
-    pf_dict = {}
-    pf_input['Input'] = {}
-    pf_dict['Output'] = {"NumDensity": "", "FullDensity": "",
-                         "InitialPackingFrac": "", "SuggestedPackingFrac": ""}
+def pf_calculator(input_dict: dict):
+    """An example input showing every possible options is:
+
+        .. code-block:: JSON
+
+          {
+            "SampleFormula": {
+                               'Sr': '1.0',
+                               'Ti': '1.0',
+                               'O': '3.0'
+                             },
+            "MassSampleCan": 40.762,
+            "MassEmptyCan": 38.674,
+            "CanInnerRadius": 0.3,
+            "SampleHeight": 4.6,
+            "FullNumDensity" : 0.0905,
+            "LevelAtHighQ": 0.452127,
+            "SelfScattering": 0.370767
+          }
+    """
+
+    mass = input_dict["MassSampleCan"] - input_dict["MassEmptyCan"]
+    volume = math.pi * input_dict["CanInnerRadius"] ** 2
+    volume *= input_dict["SampleHeight"]
+    density = mass / volume
 
     ele_val = []
     ele_wt = []
 
-    key_list = ["MassSampleCan", "MassEmptyCan", "CanInnerRadius",
-                "SampleHeight", "FullNumDensity", "LevelAtHighQ",
-                "SelfScattering"]
-
-    for i in key_list:
-        pf_input['Input'][i] = input()
-    mass = float(pf_input['Input']["MassSampleCan"])
-    mass -= float(pf_input['Input']["MassEmptyCan"])
-    volume = math.pi * (float((pf_input['Input']["CanInnerRadius"])) ** 2)
-    volume *= float(pf_input['Input']["SampleHeight"])
-    density = mass/volume
-
-    for i in input_dict:
-        ele_val.append(input_dict[i])
-        ele_wt.append(data[i]['Atwt'])
-    ele_int = [(float(i)) for i in ele_val]
+    for key, item in input_dict["SampleFormula"].items():
+        ele_val.append(float(item))
+        ele_wt.append(data[key]['Atwt'])
 
     e11 = 0
-    for x, y in zip(ele_int, ele_wt):
+    for x, y in zip(ele_val, ele_wt):
         e11 += x * y
-    full_density = (float(pf_input['Input']["FullNumDensity"]) * e11)
-    full_density /= (sum(ele_int) * avogadro_const * 1E-24)
-    number_density = density / e11 * sum(ele_int) * avogadro_const * 1E-24
-    init_pf = number_density / float(pf_input['Input']["FullNumDensity"])
-    sugg_pf = init_pf * float(pf_input['Input']["LevelAtHighQ"])
-    sugg_pf /= float(pf_input['Input']["SelfScattering"])
-    dict_keys = [number_density, full_density, init_pf, sugg_pf]
 
-    for i, j in zip(pf_dict['Output'], dict_keys):
-        pf_dict['Output'][i] = j
+    full_density = input_dict["FullNumDensity"] * e11
+    full_density /= (sum(ele_val) * avogadro_const * 1E-24)
+    number_density = density / e11 * sum(ele_val) * avogadro_const * 1E-24
 
-    return pf_input, pf_dict
-    
+    init_pf = number_density / input_dict["FullNumDensity"]
+    sugg_pf = init_pf * input_dict["LevelAtHighQ"]
+    sugg_pf /= input_dict["SelfScattering"]
+
+    out_dict = {}
+    out_dict["Input"] = input_dict
+    out_dict["Output"] = {"NumDensity": number_density,
+                          "FullDensity": full_density,
+                          "InitialPackingFrac": init_pf,
+                          "SuggestedPackingFrac": sugg_pf}
+
+    return out_dict

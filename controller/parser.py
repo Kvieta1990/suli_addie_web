@@ -51,11 +51,19 @@ def formula_parser(input_str: str):
             ele_name = ""
             i_tmp = 0
             for x in parts[y]:
+                if x.isalpha():
+                    break
+                else:
+                    ele_name += x
+                    i_tmp += 1
+            for x in parts[y][i_tmp:]:
                 if x.isdigit() or x == ".":
                     break
                 else:
                     ele_name += x
                     i_tmp += 1
+            ele_name = ele_name.replace("(", "")
+            ele_name = ele_name.replace(")", "")
             if i_tmp == len(parts[y]):
                 z = 1.0
             else:
